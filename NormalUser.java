@@ -3,13 +3,21 @@ import java.time.LocalDate;
 import java.util.List;
 
 class NormalUser extends User {
+    // ANSI escape codes
+    private static final String RESET = "\u001B[0m";
+    private static final String RED = "\u001B[31m";
+    private static final String GREEN = "\u001B[32m";
+    private static final String YELLOW = "\u001B[33m";
+    private static final String BLUE = "\u001B[34m";
+    private static final String CYAN = "\u001B[36m";
+
     public NormalUser(String userID, String name, String email, String password, String citizenshipNumber, LocalDate dateOfBirth) {
         super(userID, name, email, password, citizenshipNumber, dateOfBirth);
     }
 
     public void userDashboard(Scanner scanner) {
         while (true) {
-            System.out.println("\n===== USER DASHBOARD =====");
+            System.out.println(CYAN + "\n===== USER DASHBOARD =====" + RESET);
             System.out.println("1. Apply for License");
             System.out.println("2. Check Application Status");
             System.out.println("3. Renew License");
@@ -30,21 +38,21 @@ class NormalUser extends User {
                     renew();
                     break;
                 case 4:
-                    System.out.println("Logging out...");
+                    System.out.println(GREEN + "Logging out..." + RESET);
                     return;
                 default:
-                    System.out.println("Invalid choice. Try again.");
+                    System.out.println(RED + "Invalid choice. Try again." + RESET);
             }
         }
     }
 
     public void applyForLicense(Scanner scanner) {
-        System.out.println("Applying for a license...");
+        System.out.println(CYAN + "Applying for a license..." + RESET);
         System.out.print("Enter requested category (A,B,C,D,E,F): ");
         String category = scanner.nextLine().toUpperCase();
 
         if (!isEligibleForCategory(category)) {
-            System.out.println("You are not eligible to apply for this category.");
+            System.out.println(RED + "You are not eligible to apply for this category." + RESET);
             return;
         }
 
@@ -70,22 +78,22 @@ class NormalUser extends User {
     }
 
     public void renew() {
-        System.out.println("Renewing license...");
+        System.out.println(CYAN + "Renewing license..." + RESET);
         License currentLicense = ApplicationManager.getLicenseByUser(this.userID);
         if (currentLicense != null && currentLicense.isExpired()) {
             String applicationID = "AP" + (ApplicationManager.getPendingApplications().size() + 1);
             Application application = new Application(applicationID, this.userID, currentLicense.getCategory());
             ApplicationManager.submitApplication(application);
         } else {
-            System.out.println("No license to renew or license is not expired.");
+            System.out.println(RED + "No license to renew or license is not expired." + RESET);
         }
     }
 
     public void checkStatus() {
-        System.out.println("Checking application status...");
+        System.out.println(CYAN + "Checking application status..." + RESET);
         List<Application> applications = ApplicationManager.getApplicationsByUser(this.userID);
         if (applications.isEmpty()) {
-            System.out.println("No applications found.");
+            System.out.println(YELLOW + "No applications found." + RESET);
         } else {
             for (Application application : applications) {
                 System.out.println(application);
@@ -95,6 +103,6 @@ class NormalUser extends User {
 
     @Override
     public void displayDashboard() {
-        System.out.println("Welcome to Normal User Dashboard!");
+        System.out.println(CYAN + "Welcome to Normal User Dashboard!" + RESET);
     }
 }

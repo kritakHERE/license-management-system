@@ -12,18 +12,26 @@ class UserManager {
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
     private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
 
+    // ANSI escape codes
+    private static final String RESET = "\u001B[0m";
+    private static final String RED = "\u001B[31m";
+    private static final String GREEN = "\u001B[32m";
+    private static final String YELLOW = "\u001B[33m";
+    private static final String BLUE = "\u001B[34m";
+    private static final String CYAN = "\u001B[36m";
+
     public void registerUser(Scanner scanner) {
-        System.out.println("\n===== USER REGISTRATION =====");
+        System.out.println(CYAN + "\n===== USER REGISTRATION =====" + RESET);
         System.out.print("Enter Name: ");
         String name = scanner.nextLine();
         System.out.print("Enter Email: ");
         String email = scanner.nextLine();
         if (!isValidEmail(email)) {
-            System.out.println("Invalid email format.");
+            System.out.println(RED + "Invalid email format." + RESET);
             return;
         }
         if (users.containsKey(email)) {
-            System.out.println("Email already registered.");
+            System.out.println(RED + "Email already registered." + RESET);
             return;
         }
         System.out.print("Enter Password: ");
@@ -31,13 +39,13 @@ class UserManager {
         System.out.print("Enter Citizenship Number: ");
         String citizenshipNumber = scanner.nextLine();
         if (citizenshipNumbers.contains(citizenshipNumber)) {
-            System.out.println("Citizenship number already registered.");
+            System.out.println(RED + "Citizenship number already registered." + RESET);
             return;
         }
         System.out.print("Enter Date of Birth (YYYY-MM-DD): ");
         LocalDate dateOfBirth = LocalDate.parse(scanner.nextLine());
         if (Period.between(dateOfBirth, LocalDate.now()).getYears() < 18) {
-            System.out.println("User must be at least 18 years old to apply for a license.");
+            System.out.println(RED + "User must be at least 18 years old to apply for a license." + RESET);
             return;
         }
         System.out.print("Select Role (1: Normal User, 2: Admin): ");
@@ -52,21 +60,21 @@ class UserManager {
         } else if (role == 2) {
             newUser = new Admin(userID, name, email, password, citizenshipNumber, dateOfBirth);
         } else {
-            System.out.println("Invalid role selection!");
+            System.out.println(RED + "Invalid role selection!" + RESET);
             return;
         }
 
         users.put(email, newUser);
         citizenshipNumbers.add(citizenshipNumber);
-        System.out.println("User registered successfully! User ID: " + userID);
+        System.out.println(GREEN + "User registered successfully! User ID: " + userID + RESET);
     }
 
     public User loginUser(Scanner scanner) {
-        System.out.println("\n===== USER LOGIN =====");
+        System.out.println(CYAN + "\n===== USER LOGIN =====" + RESET);
         System.out.print("Enter Email: ");
         String email = scanner.nextLine();
         if (!isValidEmail(email)) {
-            System.out.println("Invalid email format.");
+            System.out.println(RED + "Invalid email format." + RESET);
             return null;
         }
         System.out.print("Enter Password: ");
@@ -75,10 +83,10 @@ class UserManager {
         User user = users.get(email);
 
         if (user != null && user.getPassword().equals(password)) {
-            System.out.println("Login successful! Welcome, " + user.name);
+            System.out.println(GREEN + "Login successful! Welcome, " + user.name + RESET);
             return user;
         } else {
-            System.out.println("Invalid email or password.");
+            System.out.println(RED + "Invalid email or password." + RESET);
             return null;
         }
     }

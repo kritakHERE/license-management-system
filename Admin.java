@@ -2,13 +2,21 @@ import java.util.Scanner;
 import java.time.LocalDate;
 
 class Admin extends User {
+    // ANSI escape codes
+    private static final String RESET = "\u001B[0m";
+    private static final String RED = "\u001B[31m";
+    private static final String GREEN = "\u001B[32m";
+    private static final String YELLOW = "\u001B[33m";
+    private static final String BLUE = "\u001B[34m";
+    private static final String CYAN = "\u001B[36m";
+
     public Admin(String userID, String name, String email, String password, String citizenshipNumber, LocalDate dateOfBirth) {
         super(userID, name, email, password, citizenshipNumber, dateOfBirth);
     }
 
     public void adminDashboard(Scanner scanner) {
         while (true) {
-            System.out.println("\n===== ADMIN DASHBOARD =====");
+            System.out.println(CYAN + "\n===== ADMIN DASHBOARD =====" + RESET);
             System.out.println("1. View Pending Applications");
             System.out.println("2. Approve/Reject Application");
             System.out.println("3. Generate Reports");
@@ -33,16 +41,16 @@ class Admin extends User {
                     renew(scanner);
                     break;
                 case 5:
-                    System.out.println("Logging out...");
+                    System.out.println(GREEN + "Logging out..." + RESET);
                     return;
                 default:
-                    System.out.println("Invalid choice. Try again.");
+                    System.out.println(RED + "Invalid choice. Try again." + RESET);
             }
         }
     }
 
     public void viewPendingApplications() {
-        System.out.println("Viewing pending applications...");
+        System.out.println(CYAN + "Viewing pending applications..." + RESET);
         for (Application app : ApplicationManager.getPendingApplications()) {
             System.out.println(app);
         }
@@ -59,12 +67,12 @@ class Admin extends User {
         } else if (decision.equals("R")) {
             ApplicationManager.rejectApplication(appId);
         } else {
-            System.out.println("Invalid decision. Please enter 'A' to approve or 'R' to reject.");
+            System.out.println(RED + "Invalid decision. Please enter 'A' to approve or 'R' to reject." + RESET);
         }
     }
 
     public void generateReports() {
-        System.out.println("Generating reports...");
+        System.out.println(CYAN + "Generating reports..." + RESET);
         // Example report generation logic
         System.out.println("Total Applications: " + ApplicationManager.getPendingApplications().size());
         System.out.println("Total Licenses Issued: " + ApplicationManager.getLicenseByUser(this.userID));
@@ -77,12 +85,12 @@ class Admin extends User {
         if (user != null) {
             user.renew();
         } else {
-            System.out.println("User not found.");
+            System.out.println(RED + "User not found." + RESET);
         }
     }
 
     @Override
     public void displayDashboard() {
-        System.out.println("Welcome to Admin Dashboard!");
+        System.out.println(CYAN + "Welcome to Admin Dashboard!" + RESET);
     }
 }
