@@ -1,8 +1,9 @@
 import java.util.Scanner;
+import java.time.LocalDate;
 
 class Admin extends User {
-    public Admin(String userID, String name, String email, String password, String citizenshipNumber) {
-        super(userID, name, email, password, citizenshipNumber);
+    public Admin(String userID, String name, String email, String password, String citizenshipNumber, LocalDate dateOfBirth) {
+        super(userID, name, email, password, citizenshipNumber, dateOfBirth);
     }
 
     public void adminDashboard(Scanner scanner) {
@@ -11,7 +12,8 @@ class Admin extends User {
             System.out.println("1. View Pending Applications");
             System.out.println("2. Approve/Reject Application");
             System.out.println("3. Generate Reports");
-            System.out.println("4. Logout");
+            System.out.println("4. Renew License");
+            System.out.println("5. Logout");
             System.out.print("Choose an option: ");
             
             int choice = scanner.nextInt();
@@ -28,6 +30,9 @@ class Admin extends User {
                     generateReports();
                     break;
                 case 4:
+                    renew(scanner);
+                    break;
+                case 5:
                     System.out.println("Logging out...");
                     return;
                 default:
@@ -63,6 +68,17 @@ class Admin extends User {
         // Example report generation logic
         System.out.println("Total Applications: " + ApplicationManager.getPendingApplications().size());
         System.out.println("Total Licenses Issued: " + ApplicationManager.getLicenseByUser(this.userID));
+    }
+
+    public void renew(Scanner scanner) {
+        System.out.print("Enter user ID to renew license: ");
+        String userID = scanner.nextLine();
+        NormalUser user = (NormalUser) ApplicationManager.getUserByID(userID);
+        if (user != null) {
+            user.renew();
+        } else {
+            System.out.println("User not found.");
+        }
     }
 
     @Override

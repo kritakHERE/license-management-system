@@ -1,13 +1,21 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 class ApplicationManager {
     private static ArrayList<Application> applications = new ArrayList<>();
     private static HashMap<String, License> issuedLicenses = new HashMap<>();
+    private static HashMap<String, User> users = new HashMap<>();
 
     public static void submitApplication(Application application) {
         applications.add(application);
         System.out.println("Application submitted successfully! Your Application ID: " + application.getApplicationID());
+
+        // Auto-approve if applying for a lower category
+        License currentLicense = getLicenseByUser(application.getUserID());
+        if (currentLicense != null && application.getRequestedCategory().charAt(0) > currentLicense.getCategory().charAt(0)) {
+            approveApplication(application.getApplicationID(), "System");
+        }
     }
 
     public static ArrayList<Application> getPendingApplications() {
@@ -27,6 +35,20 @@ class ApplicationManager {
             }
         }
         return null;
+    }
+
+    public static List<Application> getApplicationsByUser(String userID) {
+        List<Application> userApplications = new ArrayList<>();
+        for (Application app : applications) {
+            if (app.getUserID().equals(userID)) {
+                userApplications.add(app);
+            }
+        }
+        return userApplications;
+    }
+
+    public static User getUserByID(String userID) {
+        return users.get(userID);
     }
 
     public static void approveApplication(String applicationID, String adminID) {
