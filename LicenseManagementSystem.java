@@ -28,6 +28,8 @@ public class LicenseManagementSystem {
                             } else {
                                 ((NormalUser) user).userDashboard(scanner);
                             }
+                        } else {
+                            System.out.println("Returning to main menu...");
                         }
                         break;
                     case 3:

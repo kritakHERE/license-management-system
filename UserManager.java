@@ -3,10 +3,14 @@ import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.HashSet;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 class UserManager {
     private HashMap<String, User> users = new HashMap<>();
     private HashSet<String> citizenshipNumbers = new HashSet<>();
+    private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
 
     public void registerUser(Scanner scanner) {
         System.out.println("\n===== USER REGISTRATION =====");
@@ -14,6 +18,10 @@ class UserManager {
         String name = scanner.nextLine();
         System.out.print("Enter Email: ");
         String email = scanner.nextLine();
+        if (!isValidEmail(email)) {
+            System.out.println("Invalid email format.");
+            return;
+        }
         if (users.containsKey(email)) {
             System.out.println("Email already registered.");
             return;
@@ -57,6 +65,10 @@ class UserManager {
         System.out.println("\n===== USER LOGIN =====");
         System.out.print("Enter Email: ");
         String email = scanner.nextLine();
+        if (!isValidEmail(email)) {
+            System.out.println("Invalid email format.");
+            return null;
+        }
         System.out.print("Enter Password: ");
         String password = scanner.nextLine();
 
@@ -69,6 +81,11 @@ class UserManager {
             System.out.println("Invalid email or password.");
             return null;
         }
+    }
+
+    private boolean isValidEmail(String email) {
+        Matcher matcher = EMAIL_PATTERN.matcher(email);
+        return matcher.matches();
     }
 
     public User getUserByID(String userID) {

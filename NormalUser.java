@@ -66,10 +66,7 @@ class NormalUser extends User {
         }
         char currentCategory = currentLicense.getCategory().charAt(0);
         char requestedCategory = category.charAt(0);
-        if (currentCategory == 'B' && requestedCategory >= 'C' && requestedCategory <= 'F') {
-            return true; // Eligible for lower categories
-        }
-        return requestedCategory <= currentCategory; // Eligible for same or lower category
+        return requestedCategory >= currentCategory; // Eligible for same or lower category
     }
 
     public void renew() {
